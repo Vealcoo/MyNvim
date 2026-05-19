@@ -66,6 +66,30 @@ map("n", "<leader>gb", function()
 end, { desc = "Git browse" })
 
 map("n", "err", "<cmd>Trouble diagnostics toggle win.position=right<CR>", { desc = "Trouble toggle" })
+map("n", "<leader>dd", function()
+  Snacks.picker.diagnostics_buffer()
+end, { desc = "Diagnostics current buffer" })
+map("n", "<leader>dD", function()
+  Snacks.picker.diagnostics()
+end, { desc = "Diagnostics workspace" })
+map("n", "<leader>dt", "<cmd>Trouble diagnostics toggle focus=false filter.buf=0 win.position=right<CR>", { desc = "Trouble buffer diagnostics" })
+map("n", "<leader>dT", "<cmd>Trouble diagnostics toggle focus=false win.position=right<CR>", { desc = "Trouble workspace diagnostics" })
+map("n", "<leader>df", vim.diagnostic.open_float, { desc = "Diagnostic float" })
+map("n", "<leader>dq", function()
+  vim.diagnostic.setqflist { open = true }
+end, { desc = "Diagnostics quickfix" })
+map("n", "[d", function()
+  vim.diagnostic.jump { count = -1, float = true }
+end, { desc = "Previous diagnostic" })
+map("n", "]d", function()
+  vim.diagnostic.jump { count = 1, float = true }
+end, { desc = "Next diagnostic" })
+map("n", "[e", function()
+  vim.diagnostic.jump { count = -1, severity = vim.diagnostic.severity.ERROR, float = true }
+end, { desc = "Previous error" })
+map("n", "]e", function()
+  vim.diagnostic.jump { count = 1, severity = vim.diagnostic.severity.ERROR, float = true }
+end, { desc = "Next error" })
 map("n", "ee", "<cmd>Trouble symbols toggle focus=false win.position=right<CR>", { desc = "Document symbols" })
 map("n", "<leader>lr", "<cmd>Trouble lsp toggle focus=false win.position=right<CR>", { desc = "LSP references" })
 map("n", "<leader>w", function()
@@ -85,6 +109,22 @@ map("n", "<leader>aa", "<cmd>CodeCompanionActions<CR>", { desc = "AI actions" })
 map("n", "<leader>ac", "<cmd>CodeCompanionChat Toggle<CR>", { desc = "AI chat" })
 map("v", "<leader>ac", "<cmd>CodeCompanionChat Add<CR>", { desc = "AI chat selection" })
 map({ "n", "v" }, "<leader>ai", "<cmd>CodeCompanion<CR>", { desc = "AI inline" })
+map("n", "<leader>ao", "<cmd>CodeCompanionCLI agent=codex<CR>", { desc = "AI Codex CLI" })
+map({ "n", "v" }, "<leader>aq", function()
+  require("codecompanion").cli({ agent = "codex", prompt = true })
+end, { desc = "AI Codex prompt" })
+map({ "n", "v" }, "<leader>ax", function()
+  require("codecompanion").cli("#{this}", { agent = "codex", focus = false })
+end, { desc = "AI Codex add context" })
+map("n", "<leader>ad", function()
+  require("codecompanion").cli("#{diagnostics} Can you fix these diagnostics?", { agent = "codex", focus = false, submit = true })
+end, { desc = "AI Codex diagnostics" })
+map("n", "<leader>at", function()
+  require("codecompanion").cli(
+    "#{terminal} Sharing the latest terminal output. Can you inspect it and suggest or apply a fix?",
+    { agent = "codex", focus = false, submit = true }
+  )
+end, { desc = "AI Codex terminal output" })
 map("n", "<leader>au", "<cmd>Copilot auth<CR>", { desc = "Copilot auth" })
 map("n", "<leader>ap", "<cmd>Copilot panel<CR>", { desc = "Copilot panel" })
 

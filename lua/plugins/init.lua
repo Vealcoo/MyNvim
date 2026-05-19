@@ -109,7 +109,7 @@ return {
 
   {
     "olimorris/codecompanion.nvim",
-    cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionActions" },
+    cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionActions", "CodeCompanionCLI" },
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
@@ -164,7 +164,7 @@ return {
           command_palette = true, -- position the cmdline and popupmenu together
           long_message_to_split = false, -- long messages will be sent to a split
           inc_rename = false, -- enables an input dialog for inc-rename.nvim
-          lsp_doc_border = false, -- add a border to hover docs and signature help
+          lsp_doc_border = true, -- add a border to hover docs and signature help
         },
         popupmenu = {
           enabled = true,
@@ -204,7 +204,11 @@ return {
           end,
         },
         condition = function(buf)
-          local buf_type = vim.api.nvim_buf_get_option(buf, "buftype")
+          if not buf or not vim.api.nvim_buf_is_valid(buf) then
+            return false
+          end
+
+          local buf_type = vim.api.nvim_get_option_value("buftype", { buf = buf })
           return buf_type ~= "nofile" and buf_type ~= "terminal"
         end,
         trigger_events = { "InsertLeave", "TextChanged" },
