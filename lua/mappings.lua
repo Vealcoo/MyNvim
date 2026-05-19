@@ -54,6 +54,24 @@ map("n", "<leader>fl", function()
   Snacks.picker.lines()
 end, { desc = "Buffer lines" })
 
+map("n", "<leader>rw", function()
+  local word = vim.fn.expand "<cword>"
+
+  if word == "" then
+    return
+  end
+
+  vim.ui.input({ prompt = "Replace `" .. word .. "` with: " }, function(replacement)
+    if replacement == nil then
+      return
+    end
+
+    local search = vim.fn.escape(word, [[\/.*$^~[]])
+    local replace = vim.fn.escape(replacement, [[\/&]])
+    vim.cmd("%s/\\<" .. search .. "\\>/" .. replace .. "/gc")
+  end)
+end, { desc = "Replace word in buffer" })
+
 map("n", "<leader>cu", "<cmd>TSCaptureUnderCursor<CR>", { desc = "Find media" })
 
 map("n", "git", "<cmd>Gitsigns diffthis<CR>", { desc = "Git diff" })
